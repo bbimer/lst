@@ -10,9 +10,9 @@ class Node
 public:
 	T value;
 	Node* next;
-	Node* down;
+	Node* prev;
 
-	Node(const T& value) : value(value), next(nullptr), down(nullptr) {}
+	Node(const T& value) : value(value), next(nullptr), prev(nullptr) {}
 
 	void print() const
 	{
@@ -25,22 +25,41 @@ class List
 {
 public:
 	Node<T>* head;
+	Node<T>* tail;
 	int size;
 
 
-	List() : head(nullptr), size(0) {}
+	List() : head(nullptr), tail(nullptr), size(0) {}
 
-	void add(const T& value)
+	~List() { clear(); }
+
+	void AddToHead(const T& value)
 	{
 		Node<T>* nodePtr = new Node<T>(value);
-		nodePtr->next = head;
-		head = nodePtr;
+		if (head == nullptr) {
+			head = tail = nodePtr;
+		}
+		else {
+			nodePtr->next = head;
+			head->prev = nodePtr;
+			head = nodePtr;
+		}
 		++size;
 	}
-	// head ->[10 | next -> nullptr]
-	// nodePtr ->[20 | next -> nullptr]
-	// nodePtr ->[20 | next ->[10 | next -> nullptr]]
-	// head ->[20 | next ->[10 | next -> nullptr]]
+	
+	void AddToTail(const T& value)
+	{
+		Node<T>* nodePtr = new Node<T>(value);
+		if (head == nullptr) {
+			head = tail = nodePtr;
+		}
+		else {
+			tail->next = nodePtr;
+			nodePtr->prev = tail;
+			tail = nodePtr;
+		}
+		++size;
+	}
 
 
 	void remove()

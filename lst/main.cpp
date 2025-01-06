@@ -8,9 +8,10 @@ int main()
 	std::cout << "Linked List" << std::endl << std::endl;
 
 	List<std::string> list;
-	list.add("one");
-	list.add("two");
-	list.add("three");
+	list.AddToHead("one");
+	list.AddToHead("two");
+	list.AddToHead("three");
+	list.AddToTail("four");
 	list.print();
 	std::cout << std::endl;
 
@@ -24,9 +25,9 @@ int main()
 	list.print();
 	std::cout << std::endl;
 
-	list.add("one");
-	list.add("two");
-	list.add("three");
+	list.AddToHead("one");
+	list.AddToHead("two");
+	list.AddToHead("three");
 	list.print();
 	std::cout << std::endl;
 
@@ -64,7 +65,7 @@ int main()
 	list.print();
 	std::cout << std::endl;
 
-	list.add("ten");
+	list.AddToHead("ten");
 	list.addAfter("twelve", (list.addAfter("eleven", list.head)));
 	list.print();
 	std::cout << std::endl;
