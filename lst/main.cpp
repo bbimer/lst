@@ -15,13 +15,13 @@ int main()
 	list.print();
 	std::cout << std::endl;
 
-	list.remove();
-	list.remove();
+	list.DeleteFromHead();
+	list.DeleteFromTail();
 	list.print();
 	std::cout << std::endl;
 
-	list.remove();
-	list.remove();
+	list.DeleteFromHead();
+	list.DeleteFromTail();
 	list.print();
 	std::cout << std::endl;
 

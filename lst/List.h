@@ -62,12 +62,35 @@ public:
 	}
 
 
-	void remove()
+	void DeleteFromHead()
 	{
 		if (head != nullptr)
 		{
 			Node<T>* nodePtr = head;
 			head = head->next;
+			if (head != nullptr) {
+				head->prev = nullptr;
+			}
+			else {
+				tail = nullptr;
+			}
+			delete nodePtr;
+			--size;
+		}
+	}
+
+	void DeleteFromTail()
+	{
+		if (tail != nullptr)
+		{
+			Node<T>* nodePtr = tail;
+			tail = tail->prev;
+			if (tail != nullptr) {
+				tail->next = nullptr;
+			}
+			else {
+				head = nullptr;
+			}
 			delete nodePtr;
 			--size;
 		}
@@ -134,7 +157,7 @@ public:
 	{
 		while (head != nullptr)
 		{
-			remove();
+			DeleteFromHead();
 		}
 		size = 0;
 	}
