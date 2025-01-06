@@ -10,10 +10,9 @@ class Node
 public:
 	T value;
 	Node* next;
+	Node* down;
 
-	Node(const T& value) : value(value), next(nullptr)
-	{
-	}
+	Node(const T& value) : value(value), next(nullptr), down(nullptr) {}
 
 	void print() const
 	{
@@ -26,15 +25,17 @@ class List
 {
 public:
 	Node<T>* head;
-	List() : head{ nullptr }
-	{
-	}
+	int size;
+
+
+	List() : head(nullptr), size(0) {}
 
 	void add(const T& value)
 	{
 		Node<T>* nodePtr = new Node<T>(value);
 		nodePtr->next = head;
 		head = nodePtr;
+		++size;
 	}
 	// head ->[10 | next -> nullptr]
 	// nodePtr ->[20 | next -> nullptr]
@@ -49,6 +50,7 @@ public:
 			Node<T>* nodePtr = head;
 			head = head->next;
 			delete nodePtr;
+			--size;
 		}
 	}
 
@@ -93,6 +95,7 @@ public:
 		Node<T>* nodePtr = new Node<T>(value);
 		nodePtr->next = afterPtr->next;
 		afterPtr->next = nodePtr;
+		++size;
 		return afterPtr->next;
 	}
 
@@ -103,6 +106,7 @@ public:
 			Node<T>* nodePtr = afterPtr->next;
 			afterPtr->next = afterPtr->next->next;
 			delete nodePtr;
+			--size;
 		}
 		return afterPtr;
 	}
@@ -113,6 +117,7 @@ public:
 		{
 			remove();
 		}
+		size = 0;
 	}
 
 	void doForEach(void(*func)(Node<T>* nodePtr))
