@@ -9,8 +9,8 @@ class Node
 {
 public:
 	T value;
-	Node* next;
-	Node* prev;
+	Node<T>* next;
+	Node<T>* prev;
 
 	Node(const T& value) : value(value), next(nullptr), prev(nullptr) {}
 
@@ -31,7 +31,7 @@ public:
 
 	List() : head(nullptr), tail(nullptr), size(0) {}
 
-	~List() { clear(); }
+	~List() { DeleteAll(); }
 
 	void AddToHead(const T& value)
 	{
@@ -96,6 +96,43 @@ public:
 		}
 	}
 
+	void DeleteAll()
+	{
+		while (head != nullptr)
+		{
+			DeleteFromHead();
+		}
+		size = 0;
+	}
+
+	void DeleteByIdx(int index) {
+		if (index < 0 || index >= size) {
+			std::cerr << "Index out of range.\n";
+			return;
+		}
+
+		Node<T>* current = head;
+		for (size_t i = 0; i < index; ++i) {
+			current = current->next;
+		}
+
+		if (current == head) {
+			DeleteFromHead();
+			return;
+		}
+
+		if (current == tail) {
+			DeleteFromTail();
+			return;
+		}
+
+		current->prev->next = current->next;
+		current->next->prev = current->prev;
+
+		delete current;
+		--size;
+	}
+
 	Node<T>* find(const T& value) const
 	{
 		for (Node<T>* nodePtr = head;
@@ -108,6 +145,19 @@ public:
 			}
 		}
 		return nullptr;
+	}
+
+	int findPosition(const T& value) const
+	{
+		int position = 0; 
+		for (Node<T>* nodePtr = head; nodePtr != nullptr; nodePtr = nodePtr->next, ++position)
+		{
+			if (nodePtr->value == value)
+			{
+				return position; 
+			}
+		}
+		return -1;
 	}
 
 	Node<T>* findPrev(const T& value) const
@@ -136,30 +186,46 @@ public:
 		}
 		Node<T>* nodePtr = new Node<T>(value);
 		nodePtr->next = afterPtr->next;
+		if (afterPtr->next != nullptr)
+		{
+			afterPtr->next->prev = nodePtr;
+		}
 		afterPtr->next = nodePtr;
+		nodePtr->prev = afterPtr;
+		if (afterPtr == tail)
+		{
+			tail = nodePtr;
+		}
 		++size;
-		return afterPtr->next;
+		return nodePtr;
 	}
 
-	Node<T>* removeAfter(Node<T>* afterPtr)
-	{
-		if (afterPtr != nullptr && afterPtr->next != nullptr)
-		{
-			Node<T>* nodePtr = afterPtr->next;
-			afterPtr->next = afterPtr->next->next;
-			delete nodePtr;
-			--size;
-		}
-		return afterPtr;
-	}
 
-	void clear()
-	{
-		while (head != nullptr)
-		{
-			DeleteFromHead();
+	Node<T>* addByIdx(const T& value, int index) {
+		if (index < 0 || index >= size)
+			return nullptr;
+
+		Node<T>* current = head;
+		for (size_t i = 0; i < index; ++i) {
+			current = current->next;
 		}
-		size = 0;
+
+		Node<T>* nodePtr = new Node<T>(value);
+		nodePtr->next = current->next;
+		if (current->next != nullptr) {
+			current->next->prev = nodePtr;
+		}
+
+		current->next = nodePtr;
+		nodePtr->prev = current;
+
+		if (current == tail)
+		{
+			tail = nodePtr;
+		}
+
+		++size;
+		return nodePtr;
 	}
 
 	void doForEach(void(*func)(Node<T>* nodePtr))
@@ -176,12 +242,14 @@ public:
 		std::cout << " > ";
 	}
 
-	void print()
+	void Show()
 	{
 		std::cout << " > ";
 		doForEach(printNode);
 		std::cout << std::endl;
 	}
+
+
 };
 
 #endif
