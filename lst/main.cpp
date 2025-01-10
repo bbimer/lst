@@ -57,7 +57,7 @@ int main()
 	std::cout << "find position: " << list.findPosition("five") << std::endl;
 	
 	std::cout << std::endl << std::endl;
-	list.addAfterByIdx("new_element", 4);
+	list.addByIdx("new_element", 4);
 	list.Show();
 
 	/*nodePtr = list.findPrev("two + two");
