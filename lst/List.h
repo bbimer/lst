@@ -28,7 +28,6 @@ public:
 	Node<T>* tail;
 	int size;
 
-
 	List() : head(nullptr), tail(nullptr), size(0) {}
 
 	~List() { DeleteAll(); }
@@ -157,7 +156,7 @@ public:
 				return position; 
 			}
 		}
-		return -1;
+		return NULL;
 	}
 
 	Node<T>* findPrev(const T& value) const
@@ -234,6 +233,24 @@ public:
 		{
 			func(nodePtr);
 		}
+	}
+
+	void reverse() {
+		if (!head || !head->next) return;
+
+		Node<T>* current = head;
+		Node<T>* temp = nullptr;
+		 
+		while (current) {
+			temp = current->prev;
+			current->prev = current->next;
+			current->next = temp;
+			current = current->prev;
+		}
+
+		temp = head;
+		head = tail;
+		tail = temp;
 	}
 
 	static void printNode(Node<T>* nodePtr)

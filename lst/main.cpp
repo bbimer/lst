@@ -59,6 +59,8 @@ int main()
 	std::cout << std::endl << std::endl;
 	list.addByIdx("new_element", 4);
 	list.Show();
+	list.reverse();
+	list.Show();
 
 	/*nodePtr = list.findPrev("two + two");
 	list.removeAfter(nodePtr);
