@@ -34,65 +34,80 @@ public:
 
 	void AddToHead(const T& value)
 	{
-		Node<T>* nodePtr = new Node<T>(value);
-		if (head == nullptr) {
-			head = tail = nodePtr;
+		try
+		{
+			Node<T>* nodePtr = new Node<T>(value);
+			if (head == nullptr) {
+				head = tail = nodePtr;
+			}
+			else {
+				nodePtr->next = head;
+				head->prev = nodePtr;
+				head = nodePtr;
+			}
+			++size;
 		}
-		else {
-			nodePtr->next = head;
-			head->prev = nodePtr;
-			head = nodePtr;
+		catch (const std::exception&)
+		{
+			throw std::runtime_error("AddToHead: memory allocation error");
 		}
-		++size;
 	}
+
 	
 	void AddToTail(const T& value)
 	{
-		Node<T>* nodePtr = new Node<T>(value);
-		if (head == nullptr) {
-			head = tail = nodePtr;
+		try
+		{
+			Node<T>* nodePtr = new Node<T>(value);
+			if (head == nullptr) {
+				head = tail = nodePtr;
+			}
+			else {
+				tail->next = nodePtr;
+				nodePtr->prev = tail;
+				tail = nodePtr;
+			}
+			++size;
 		}
-		else {
-			tail->next = nodePtr;
-			nodePtr->prev = tail;
-			tail = nodePtr;
+		catch (const std::exception&)
+		{
+			throw std::runtime_error("AddToTail: memory allocation error");
 		}
-		++size;
 	}
 
 
 	void DeleteFromHead()
 	{
-		if (head != nullptr)
-		{
-			Node<T>* nodePtr = head;
-			head = head->next;
-			if (head != nullptr) {
-				head->prev = nullptr;
-			}
-			else {
-				tail = nullptr;
-			}
-			delete nodePtr;
-			--size;
+		if (head == nullptr)
+			throw std::runtime_error("DeleteFromHead: attempt to delete from an empty list");
+
+		Node<T>* nodePtr = head;
+		head = head->next;
+		if (head != nullptr) {
+			head->prev = nullptr;
 		}
+		else {
+			tail = nullptr;
+		}
+		delete nodePtr;
+		--size;
 	}
 
 	void DeleteFromTail()
 	{
-		if (tail != nullptr)
-		{
-			Node<T>* nodePtr = tail;
-			tail = tail->prev;
-			if (tail != nullptr) {
-				tail->next = nullptr;
-			}
-			else {
-				head = nullptr;
-			}
-			delete nodePtr;
-			--size;
+		if (tail == nullptr)
+			throw std::runtime_error("DeleteFromTail: attempt to delete from an empty list");
+
+		Node<T>* nodePtr = tail;
+		tail = tail->prev;
+		if (tail != nullptr) {
+			tail->next = nullptr;
 		}
+		else {
+			head = nullptr;
+		}
+		delete nodePtr;
+		--size;
 	}
 
 	void DeleteAll()
@@ -105,10 +120,8 @@ public:
 	}
 
 	void DeleteByIdx(int index) {
-		if (index < 0 || index >= size) {
-			std::cerr << "Index out of range.\n";
-			return;
-		}
+		if (index < 0 || index >= size)
+			throw std::out_of_range("DeleteByIdx: index out of range");
 
 		Node<T>* current = head;
 		for (size_t i = 0; i < index; ++i) {
@@ -156,7 +169,7 @@ public:
 				return position; 
 			}
 		}
-		return NULL;
+		return -1;
 	}
 
 	Node<T>* findPrev(const T& value) const
@@ -181,7 +194,7 @@ public:
 	{
 		if (afterPtr == nullptr)
 		{
-			return nullptr;
+			throw std::invalid_argument("addAfter: Invalid node pointer");
 		}
 		Node<T>* nodePtr = new Node<T>(value);
 		nodePtr->next = afterPtr->next;
@@ -202,7 +215,7 @@ public:
 
 	Node<T>* addByIdx(const T& value, int index) {
 		if (index < 0 || index >= size)
-			return nullptr;
+			throw std::out_of_range("addByIdx: index out of range");
 
 		Node<T>* current = head;
 		for (size_t i = 0; i < index; ++i) {
